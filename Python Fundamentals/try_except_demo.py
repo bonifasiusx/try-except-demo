@@ -1,4 +1,4 @@
-"""
+'''
 Portofolio Build: Try-Except Demo Script
 Created by:
     - Alfriando C Vean
@@ -7,91 +7,95 @@ Created by:
 This script demonstrates various use cases of Python's try-except block, including:
     - Handling input validation
     - Using else and finally
-    - Avoiding bad practice in exception handling
-"""
+    - Avoiding bad practice in exception handling   
+'''
 
-# ==== CASE 1: Basic try-except ====
 
-def basic_try_except_example():
-    """Demonstrates TypeError handling with string-number division"""
+import os
+def clear_terminal(): # Function to clear the terminal screen
+    """Clears the terminal screen based on the operating system."""
+    os.system('cls' if os.name == 'nt' else 'clear')
+clear_terminal()
+
+
+# === Basic try-except Example ===
+# Demonstrates how to use try-except to catch specific errors in Python
+
+# Example of try-except basic syntax in Python
+try:
+    # do something
+    divide = '8' / 2
+# except Exception:
+except TypeError:
+    # how to handle the error
+    print("You can't divide a string by a number!")
+
+
+# Example of try-except with else and finally clauses 
+try:
+    # this code might raise an error
+    divide = '8' / 2
+except TypeError:
+    # handle the error by printing a message
+    print("You can't divide a string by a number!")
+else:
+    # if no error occurs
+    print("Division successful:", divide)
+finally:
+    # always executed
+    print("This will always be executed, regardless of an error.")
+    
+# STRENGTH
+# Without try-except, the program will crash if an error occurs
+'''Uncomment below to test both input scenarios'''
+# counter = 0
+# while counter < 3:
+#     user_input_str = input('Add Counter: ')
+#     if int(user_input_str) < 0:
+#         print('Input must be a positive number!')
+#         continue
+    
+#     counter += int(user_input_str)
+# print('Program finished')
+
+
+# With try-except, the program will not crash if an error occurs
+# It will handle the error gracefully and continue running
+counter = 0
+while counter < 3:
     try:
-        divide = '8' / 2
-    except TypeError:
-        print("[TypeError] You can't divide a string by a number!")
-
-# ==== CASE 2: With else and finally ====
-
-def try_except_else_finally_example():
-    """Demonstrates else and finally behavior"""
-    try:
-        divide = 8 / 2
-    except TypeError:
-        print("[TypeError] Something went wrong with division.")
-    else:
-        print("[Success] Division successful:", divide)
-    finally:
-        print("[Finally] This block always runs.")
-
-# ==== CASE 3: Input Handling Without try-except ====
-
-def input_loop_without_exception():
-    """Program crashes if input is not a valid integer"""
-    print("\n[Without Try-Except] Program may crash with invalid input")
-    counter = 0
-    while counter < 3:
         user_input_str = input('Add Counter: ')
         if int(user_input_str) < 0:
             print('Input must be a positive number!')
             continue
         counter += int(user_input_str)
-    print('Program finished\n')
+    except ValueError:
+        print("That's not a valid number.")
+        continue    
+print('Program finished')
 
-# ==== CASE 4: Input Handling With try-except ====
+# WEAKNESS
+# without specific exception, we won't know the real error because is excepts all errors
+try:
+    file = open("data.txt", "r")
+    content = file.read()
+    print(content)
+    file.close()
+except:
+    print("Something went wrong.")
 
-def input_loop_with_exception():
-    """Safely handles input using try-except to avoid crashing"""
-    print("[With Try-Except] Handling input gracefully")
-    counter = 0
-    while counter < 3:
-        try:
-            user_input_str = input('Add Counter: ')
-            if int(user_input_str) < 0:
-                print('Input must be a positive number!')
-                continue
-            counter += int(user_input_str)
-        except ValueError:
-            print("[ValueError] That's not a valid number.")
-            continue    
-    print('Program finished\n')
-
-# ==== CASE 5: Bad Practice – Catching All Exceptions ====
-
-def catch_all_example():
-    """Example of bad practice: using a general except"""
-    try:
-        file = open("data.txt", "r")
-        content = file.read()
-        print(content)
-        file.close()
-    except:
-        print("[General Except] Something went wrong (but unclear what).")
-
-# ==== CASE 6: Good Practice – Specific Exception ====
-
-def specific_exception_example():
-    """Catching a specific FileNotFoundError with a clear message"""
-    try:
-        file = open("data.txt", "r")
-        content = file.read()
-        print(content)
-        file.close()
-    except FileNotFoundError:
-        print("[FileNotFoundError] 'data.txt' not found. Please check the filename.")
-
-# ==== CASE 7: Function with division logic ====
-
+# with specific exception, we can specificly catch a kind of error and the message is clearer.
+try:
+    file = open("data.txt", "r")
+    content = file.read()
+    print(content)
+    file.close()
+except FileNotFoundError:
+    print("The file 'data.txt' was not found. Please check the file name.")
+    
+    
 def divide_numbers(a, b):
-    """Divides two numbers and demonstrates try-except-else-finally structure"""
+    '''Wrap it up in a function to demonstrate try-except with parameters'''
     try:
         result = a / b
     except ZeroDivisionError:
@@ -100,19 +104,5 @@ def divide_numbers(a, b):
         print("Result is:", result)
     finally:
         print("Operation complete")
-
-# ==== MAIN RUN ====
-
-if __name__ == "__main__":
-    basic_try_except_example()
-    try_except_else_finally_example()
-
-    # Uncomment below to test both input scenarios
-    # input_loop_without_exception()  # ← will crash if invalid input
-    input_loop_with_exception()    # ← handles invalid input
-
-    catch_all_example()
-    specific_exception_example()
-
-    divide_numbers(10, 2)
-    divide_numbers(10, 0)
+divide_numbers(10, 2) # Example of successful division
+divide_numbers(10, 0) # Example of division by zero, which will raise an exception
